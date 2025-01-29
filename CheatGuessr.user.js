@@ -6,6 +6,7 @@
 // @author       CheatGuessr
 // @match        https://www.worldguessr.com/*
 // @grant        none
+// @license      GNU AGPLv3
 // ==/UserScript==
 
 (function() {
