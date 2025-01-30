@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CheatGuessr | WorldGuessr Cheat
 // @namespace    http://tampermonkey.net/
-// @version      1.3
+// @version      1.4
 // @description  Extremely customizable WorldGuessr cheating client. Click 3 to open the settings menu.
 // @author       CheatGuessr
 // @match        https://www.worldguessr.com/*
@@ -26,7 +26,8 @@
         keybinds: {
             toggleMap: '1',
             newTab: '2',
-            settings: '3'
+            settings: '3',
+            detailedLocation: '4'
         },
         mapPosition: 'top-left',
         mapSize: {
@@ -155,9 +156,7 @@
         const adSelectors = [
             '[id^="google_ads_iframe"]',
             '[id^="worldguessr-com_"]',
-            '.video-ad',
-            '[class*="banner"]',
-            '[id*="banner"]'
+            '.video-ad'
         ];
 
         const removeAds = () => {
@@ -224,6 +223,10 @@
                         <label>Settings Key</label>
                         <input type="text" class="settings-input" id="settingsKey" value="${settings.keybinds.settings}">
                     </div>
+                    <div class="settings-row">
+                        <label>Detailed Location Alert</label>
+                        <input type="text" class="settings-input" id="detailedLocation" value="${settings.keybinds.detailedLocation}">
+                    </div>
                 </div>
                 <div class="settings-section">
                     <h3>Map Settings</h3>
@@ -270,6 +273,7 @@
             settings.keybinds.toggleMap = document.getElementById('toggleMapKey').value;
             settings.keybinds.newTab = document.getElementById('newTabKey').value;
             settings.keybinds.settings = document.getElementById('settingsKey').value;
+            settings.keybinds.detailedLocation = document.getElementById('detailedLocation').value;
             settings.mapPosition = document.getElementById('mapPosition').value;
             settings.mapSize.width = parseInt(document.getElementById('mapWidth').value);
             settings.mapSize.height = parseInt(document.getElementById('mapHeight').value);
@@ -366,6 +370,26 @@
         }
     }
 
+    async function fetchLocationDetails(lat, long) {
+        try {
+            const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${long}`);
+            if (!response.ok) {
+                throw new Error('Failed to fetch location details');
+            }
+            const data = await response.json();
+            const { address } = data;
+            const locationDetails = `
+                Area: ${address.neighbourhood || address.suburb || address.hamlet || 'N/A'}
+                City: ${address.city || address.town || address.village || 'N/A'}
+                State: ${address.state || 'N/A'}
+                Country: ${address.country || 'N/A'}
+            `;
+            alert(locationDetails);
+        } catch (error) {
+            alert('Could not fetch location details: ' + error.message);
+        }
+    }
+
     window.addEventListener('keydown', function(event) {
         event.stopPropagation();
 
@@ -389,6 +413,13 @@
                 toggleGoogleMapsIframe(location);
             }
             toggleSettingsModal();
+        } else if (event.key === settings.keybinds.detailedLocation) {
+            const { lat, long } = location;
+            if (!lat || !long) {
+                alert('Coordinates not yet available!');
+            } else {
+                fetchLocationDetails(lat, long);
+            }
         }
     }, true);
 
