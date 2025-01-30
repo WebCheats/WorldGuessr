@@ -1,12 +1,15 @@
 // ==UserScript==
 // @name         CheatGuessr | WorldGuessr Cheat
 // @namespace    http://tampermonkey.net/
-// @version      1.2
+// @version      1.3
 // @description  Extremely customizable WorldGuessr cheating client. Click 3 to open the settings menu.
 // @author       CheatGuessr
 // @match        https://www.worldguessr.com/*
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=worldguessr.com
 // @grant        none
 // @license      GNU AGPLv3
+// @downloadURL  https://update.greasyfork.org/scripts/525258/CheatGuessr%20%7C%20WorldGuessr%20Cheat.user.js
+// @updateURL    https://update.greasyfork.org/scripts/525258/CheatGuessr%20%7C%20WorldGuessr%20Cheat.meta.js
 // ==/UserScript==
 
 (function() {
